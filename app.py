@@ -6,8 +6,8 @@ car_data = pd.read_csv("vehicles_us.csv")  # leer los datos
 st.header('Visualizaciones de performance de anuncios de venta de coches')
 
 build_graph = st.checkbox('Construir un gráfico de barras')
-hist_button = st.button('Construir histograma') 
-disp_button = st.button('Construir gráfico de dispersión')# crear un botón
+hist_button = st.button('Construir histograma')
+disp_button = st.button('Construir gráfico de dispersión')  # crear un botón
 
 if build_graph:  # al hacer clic en el botón
     # escribir un mensaje
@@ -18,13 +18,13 @@ if build_graph:  # al hacer clic en el botón
     type_counts = car_data['type'].value_counts().reset_index()
     type_counts.columns = ['type', 'count']
 
-    fig = px.bar(type_counts, 
-             x='count', 
-             y='type', 
-             orientation='h', 
-             title='Número de Vehículos por Tipo',
-             color='count',  # Colorear las barras según la cantidad
-             color_continuous_scale=px.colors.sequential.Plasma)
+    fig = px.bar(type_counts,
+                 x='count',
+                 y='type',
+                 orientation='h',
+                 title='Número de Vehículos por Tipo',
+                 color='count',  # Colorear las barras según la cantidad
+                 color_continuous_scale=px.colors.sequential.Plasma)
     fig.update_layout(
         xaxis_title='Cantidad de Vehículos',
         yaxis_title='Tipo de Vehículo',
@@ -34,19 +34,26 @@ if build_graph:  # al hacer clic en el botón
     )
 
     # mostrar un gráfico Plotly interactivo
-    st.plotly_chart(fig, use_container_width=True)   
-    
+    st.plotly_chart(fig, use_container_width=True)
+
 if hist_button:  # al hacer clic en el botón
     # escribir un mensaje
     st.write(
         'Creación de un histograma para el conjunto de datos de anuncios de venta de coches')
 
     # crear un histograma
-    fig = px.histogram(car_data, x="odometer")
+    fig = px.histogram(car_data, x='odometer', title='Distribución de Odometría',
+                       color_discrete_sequence=['#636EFA'], opacity=0.7)
+    fig.update_layout(
+        xaxis_title='Odometría (millas)',
+        yaxis_title='Frecuencia',
+        title_font=dict(size=20),
+        xaxis=dict(showgrid=True, gridcolor='LightGray'),
+        yaxis=dict(showgrid=True, gridcolor='LightGray'))
 
     # mostrar un gráfico Plotly interactivo
     st.plotly_chart(fig, use_container_width=True)
-   
+
 
 if disp_button:  # al hacer clic en el botón
     # escribir un mensaje
@@ -54,7 +61,20 @@ if disp_button:  # al hacer clic en el botón
         'Creación de un gráfico de dispersión para el conjunto de datos de anuncios de venta de coches')
 
     # crear un histograma
-    fig = px.scatter(car_data, x="odometer", y="price")
+    fig = px.scatter(car_data,
+                     x="odometer",
+                     y="price",
+                     color="condition",  # Color por condición
+                     hover_name="model",  # Nombre en el hover
+                     title='Relación entre Odometría y Precio',
+                     # crear un gráfico de dispersión
+                     color_discrete_sequence=px.colors.qualitative.Set2)
+    fig.update_layout(
+        xaxis_title='Odometría (millas)',
+        yaxis_title='Precio ($)',
+        title_font=dict(size=20),
+        xaxis=dict(showgrid=True, gridcolor='LightGray'),
+        yaxis=dict(showgrid=True, gridcolor='LightGray'))
 
     # mostrar un gráfico Plotly interactivo
     st.plotly_chart(fig, use_container_width=True)
